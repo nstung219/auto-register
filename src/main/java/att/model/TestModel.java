@@ -10,7 +10,7 @@ public class TestModel {
     private String band;
     private String languageType;
 
-    public TestModel(String day, String location, String slot, String languageType, String band) {
+    public TestModel(String day, String location, String slot, String band, String languageType) {
         this.day = day;
         this.location = location;
         this.slot = slot;
