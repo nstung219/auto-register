@@ -2,9 +2,7 @@ package att.tests;
 
 import org.testng.annotations.*;
 import att.page.TocflPage;
-import att.utils.*;
-
-import java.io.IOException;
+import att.utils.DataLoader;
 
 public class BaseTest extends TocflPage{
     private DataLoader dataLoader = new DataLoader();
