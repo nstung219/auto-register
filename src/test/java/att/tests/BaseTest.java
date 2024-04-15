@@ -1,5 +1,6 @@
 package att.tests;
 
+import att.model.TestModel;
 import org.testng.annotations.*;
 import att.page.TocflPage;
 import att.utils.DataLoader;
@@ -17,7 +18,13 @@ public class BaseTest extends TocflPage{
         input = dataLoader.getInput();
         setup();
         login();
-        selectTestLocation();
+        try {
+            TestModel testModel = input.getRequiredTest();
+            selectTestLocation(testModel);
+        } catch (Exception e) {
+            TestModel testModel = input.getOptionalTest();
+            selectTestLocation(testModel);
+        }
         tearDown();
     }
 

@@ -20,7 +20,6 @@ public class DataLoader {
         try {
             Workbook workbook = getWorkbook();
             Sheet sheet = workbook.getSheetAt(0);
-//        FormulaEvaluator formulaEvaluator = wb.getCreationHelper().createFormulaEvaluator();
 
             for (Row row : sheet) {
                 int cellCount = 0;
@@ -68,8 +67,12 @@ public class DataLoader {
     }
 
     private String getCellValue(Cell cell) {
-        DataFormatter dataFormatter = new DataFormatter();
-        return dataFormatter.formatCellValue(cell);
+        switch (cell.getCellType()) {
+            case NUMERIC:
+                return String.format("%f", cell.getNumericCellValue()).replaceAll("\\.?0*$", "");
+            default:
+                return cell.getStringCellValue();
+        }
     }
 
     public Input getInput() {
