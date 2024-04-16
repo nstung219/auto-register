@@ -35,7 +35,8 @@ public class TocflPage {
     private final String CONFIRM_REGISTER = "//input[@type=\"button\" and contains(@value, \"確認報名資料正確\")]";
     private final String CONFIRM_IDENTITY = "//input[@type = \"checkbox\" and @name = \"cok\"]";
 
-    public void setup() {
+    public void setup(Input input) {
+        this.input = input;
         HashMap<String, Object> chromePreferences = new HashMap<>();
         chromePreferences.put("profile.password_manager_enabled", false);
 
@@ -51,13 +52,14 @@ public class TocflPage {
     }
 
     public void login() {
-        getDriver().get(URL);
-        sleep(2);
-        findXpath(USERNAME).sendKeys(input.getUsername());
-        findXpath(PASSWORD).sendKeys(input.getPassword());
-        findXpath(LOGIN).click();
-        sleep(2);
-        getDriver().switchTo().alert().accept();
+        System.out.println(input);
+//        getDriver().get(URL);
+//        sleep(2);
+//        findXpath(USERNAME).sendKeys(input.getUsername());
+//        findXpath(PASSWORD).sendKeys(input.getPassword());
+//        findXpath(LOGIN).click();
+//        sleep(2);
+//        getDriver().switchTo().alert().accept();
     }
 
     public void selectTestLocation(TestModel testModel) {
@@ -89,6 +91,10 @@ public class TocflPage {
 
     public void toHomePage() {
         getDriver().get(HOME_PAGE);
+    }
+
+    public void setInput(Input input) {
+        this.input = input;
     }
 
     public void tearDown() {

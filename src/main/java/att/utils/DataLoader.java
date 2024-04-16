@@ -11,12 +11,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class DataLoader {
-
-    private int count = 0;
-    private ArrayList<Input> inputs = new ArrayList<>();
     private String dataPath = System.getProperty("dataPath");
 
-    public DataLoader() {
+    private Workbook getWorkbook() throws IOException {
+        FileInputStream fis = new FileInputStream(dataPath);
+        Workbook workbook = null;
+
+        if (dataPath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook(fis);
+        } else if (dataPath.endsWith("xls")) {
+            workbook = new HSSFWorkbook(fis);
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+
+        return workbook;
+    }
+
+    private String getCellValue(Cell cell) {
+        switch (cell.getCellType()) {
+            case NUMERIC:
+                return String.format("%f", cell.getNumericCellValue()).replaceAll("\\.?0*$", "");
+            default:
+                return cell.getStringCellValue();
+        }
+    }
+
+    public Object[] generateData() {
+        ArrayList<Input> inputs = new ArrayList<>();
         try {
             Workbook workbook = getWorkbook();
             Sheet sheet = workbook.getSheetAt(0);
@@ -49,33 +71,6 @@ public class DataLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private Workbook getWorkbook() throws IOException {
-        FileInputStream fis = new FileInputStream(dataPath);
-        Workbook workbook = null;
-
-        if (dataPath.endsWith("xlsx")) {
-            workbook = new XSSFWorkbook(fis);
-        } else if (dataPath.endsWith("xls")) {
-            workbook = new HSSFWorkbook(fis);
-        } else {
-            throw new IllegalArgumentException("The specified file is not Excel file");
-        }
-
-        return workbook;
-    }
-
-    private String getCellValue(Cell cell) {
-        switch (cell.getCellType()) {
-            case NUMERIC:
-                return String.format("%f", cell.getNumericCellValue()).replaceAll("\\.?0*$", "");
-            default:
-                return cell.getStringCellValue();
-        }
-    }
-
-    public Input getInput() {
-        return inputs.get(count++);
+        return inputs.toArray();
     }
 }
