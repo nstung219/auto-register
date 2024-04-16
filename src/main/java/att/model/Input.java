@@ -2,6 +2,9 @@ package att.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 @Data
 @Getter
 @Setter
@@ -10,10 +13,9 @@ import lombok.*;
 public class Input {
     private String username;
     private String password;
-    private TestModel requiredTest;
-    private TestModel optionalTest;
+    private ArrayList<TestModel> testModels;
 
     public String toString() {
-        return "Username: " + username + ", Password: " + password + ", Required Test: " + requiredTest + ", Optional Test: " + optionalTest;
+        return "Username: " + username + ", Password: " + password + ", Test Models: " + testModels.stream().map(TestModel::toString).collect(Collectors.joining(", "));
     }
 }

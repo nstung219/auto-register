@@ -25,13 +25,9 @@ public class BaseTest {
             }
             tocflPage.setup(input);
             tocflPage.login();
-            try {
-//                TestModel testModel = input.getRequiredTest();
-//                selectTestLocation(testModel);
-            } catch (Exception e) {
-//                TestModel testModel = input.getOptionalTest();
-//                selectTestLocation(testModel);
-            }
+            tocflPage.selectTestLocation();
+            tocflPage.confirmRegister();
+            tocflPage.confirmIdentity();
         } finally {
             tocflPage.tearDown();
         }

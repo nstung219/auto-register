@@ -31,7 +31,7 @@ public class TocflPage {
     private final String TEST_BAND = TEST_TIME + "//input[@name=\"cat\" and @value = '%s']";
     // Replace language type
     private final String LANG_TYPE = TEST_TIME + "//input[@name=\"clang\" and @value = '%s']";
-    private final String REGISTER_BUTTON = TEST_TIME + "//input[@type=\"button\" and contains(@value, \"報名\")]";
+    private final String REGISTER_BUTTON = TEST_TIME + "//input[@type=\"button\" and contains(@value, \"報名\") and not(@disabled)]";
     private final String CONFIRM_REGISTER = "//input[@type=\"button\" and contains(@value, \"確認報名資料正確\")]";
     private final String CONFIRM_IDENTITY = "//input[@type = \"checkbox\" and @name = \"cok\"]";
 
@@ -61,21 +61,34 @@ public class TocflPage {
         getDriver().switchTo().alert().accept();
     }
 
-    public void selectTestLocation(TestModel testModel) {
-        toHomePage();
-        String testLocation = String.format(TEST_LOCATION, testModel.getDay(), testModel.getLocation());
-        String testBand = String.format(TEST_BAND, testModel.getSlot(), testModel.getBand());
-        String languageType = String.format(LANG_TYPE, testModel.getSlot(), testModel.getLanguageType());
-        String registerButton = String.format(REGISTER_BUTTON, testModel.getSlot());
-        WebElement testLocationElm = findXpath(testLocation);
-        if (testLocationElm == null) {
-            testLocationElm.click();
+    public void selectTestLocation() {
+        boolean registered = false;
+        for (TestModel testModel : input.getTestModels()) {
+            if (registered) {
+                break;
+            }
+            toHomePage();
+            String testLocation = String.format(TEST_LOCATION, testModel.getDay(), testModel.getLocation());
+            String testTime = String.format(TEST_TIME, testModel.getSlot());
+            String testBand = String.format(TEST_BAND, testModel.getSlot(), testModel.getBand());
+            String languageType = String.format(LANG_TYPE, testModel.getSlot(), testModel.getLanguageType());
+            String registerButton = String.format(REGISTER_BUTTON, testModel.getSlot());
+            if (findXpath(testLocation) == null) {
+                findXpath(NEXT_PAGE_NUMBER).click();
+            }
+            findXpath(testLocation).click();
+            sleep(2);
+
+            WebElement registerButtonElm = findXpath(registerButton);
+            if (registerButtonElm == null) {
+                continue;
+            }
+            findXpath(testTime).click();
+            findXpath(testBand).click();
+            findXpath(languageType).click();
+            findXpath(registerButton).click();
+            registered = true;
         }
-        findXpath(testLocation).click();
-        sleep(2);
-        findXpath(testBand).click();
-        findXpath(languageType).click();
-        findXpath(registerButton).click();
     }
 
     public void confirmRegister() {
@@ -102,7 +115,11 @@ public class TocflPage {
     }
 
     private WebElement findXpath(String xpath) {
-        return getDriver().findElement(By.xpath(xpath));
+        try {
+            return getDriver().findElement(By.xpath(xpath));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void sleep(int second) {

@@ -46,6 +46,7 @@ public class DataLoader {
             for (Row row : sheet) {
                 int cellCount = 0;
                 Input input = new Input();
+                ArrayList<TestModel> testModels = new ArrayList<>();
                 for (Cell cell : row) {
                     switch (cellCount++) {
                         case 0:
@@ -54,18 +55,20 @@ public class DataLoader {
                         case 1:
                             input.setPassword(getCellValue(cell));
                             break;
-                        case 2:
-                            TestModel requiredTest = TestModel.fromString(getCellValue(cell));
-                            input.setRequiredTest(requiredTest);
-                            break;
-                        case 3:
-                            TestModel optionalTest = TestModel.fromString(getCellValue(cell));
-                            input.setOptionalTest(optionalTest);
-                            break;
+//                        case 2:
+//                            TestModel requiredTest = TestModel.fromString(getCellValue(cell));
+//                            input.setRequiredTest(requiredTest);
+//                            break;
+//                        case 3:
+//                            TestModel optionalTest = );
+//                            input.setOptionalTest(optionalTest);
+//                            break;
                         default:
+                            testModels.add(TestModel.fromString(getCellValue(cell)));
                             break;
                     }
                 }
+                input.setTestModels(testModels);
                 inputs.add(input);
             }
         } catch (Exception e) {
