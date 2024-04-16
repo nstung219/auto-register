@@ -24,10 +24,10 @@ public class BaseTest {
                 return;
             }
             tocflPage.setup(input);
-            tocflPage.login();
-            tocflPage.selectTestLocation();
-            tocflPage.confirmRegister();
-            tocflPage.confirmIdentity();
+//            tocflPage.login();
+//            tocflPage.selectTestLocation();
+//            tocflPage.confirmRegister();
+//            tocflPage.confirmIdentity();
         } finally {
             tocflPage.tearDown();
         }

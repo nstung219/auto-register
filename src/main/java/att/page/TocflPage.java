@@ -45,6 +45,7 @@ public class TocflPage {
         options.addArguments("--no-default-browser-check");
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
+        System.out.println(this.input);
     }
 
     public static WebDriver getDriver() {
