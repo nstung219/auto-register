@@ -11,11 +11,6 @@ import java.util.ArrayList;
 public class BaseTest {
     private DataLoader dataLoader = new DataLoader();
 
-//    @BeforeMethod(alwaysRun = true)
-//    public void beforeClass() {
-//        System.out.println("Before Method Thread ID: " + Thread.currentThread().getId());
-//    }
-
     @DataProvider(name = "data", parallel = true)
     private Object[] generateData() {
         return dataLoader.generateData();
@@ -23,8 +18,8 @@ public class BaseTest {
 
     @Test(dataProvider = "data")
     public void test(Input input) {
+        TocflPage tocflPage = new TocflPage();
         try {
-            TocflPage tocflPage = new TocflPage();
             if (input == null) {
                 return;
             }
@@ -38,15 +33,7 @@ public class BaseTest {
 //                selectTestLocation(testModel);
             }
         } finally {
-//            tearDown();
+            tocflPage.tearDown();
         }
     }
-
-    /**
-     * This method runs after every test (including during parallel execution).
-     */
-//    @AfterMethod(alwaysRun = true)
-//    public void afterClass() {
-//        System.out.println("After Method Thread ID: " + Thread.currentThread().getId());
-//    }
 }

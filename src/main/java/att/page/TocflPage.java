@@ -31,7 +31,7 @@ public class TocflPage {
     private final String TEST_BAND = TEST_TIME + "//input[@name=\"cat\" and @value = '%s']";
     // Replace language type
     private final String LANG_TYPE = TEST_TIME + "//input[@name=\"clang\" and @value = '%s']";
-    private final String REGISTER_BUTTON = TEST_TIME + "//input[@type=\"button\"]";
+    private final String REGISTER_BUTTON = TEST_TIME + "//input[@type=\"button\" and contains(@value, \"報名\")]";
     private final String CONFIRM_REGISTER = "//input[@type=\"button\" and contains(@value, \"確認報名資料正確\")]";
     private final String CONFIRM_IDENTITY = "//input[@type = \"checkbox\" and @name = \"cok\"]";
 
@@ -52,14 +52,13 @@ public class TocflPage {
     }
 
     public void login() {
-        System.out.println(input);
-//        getDriver().get(URL);
-//        sleep(2);
-//        findXpath(USERNAME).sendKeys(input.getUsername());
-//        findXpath(PASSWORD).sendKeys(input.getPassword());
-//        findXpath(LOGIN).click();
-//        sleep(2);
-//        getDriver().switchTo().alert().accept();
+        getDriver().get(URL);
+        sleep(2);
+        findXpath(USERNAME).sendKeys(input.getUsername());
+        findXpath(PASSWORD).sendKeys(input.getPassword());
+        findXpath(LOGIN).click();
+        sleep(2);
+        getDriver().switchTo().alert().accept();
     }
 
     public void selectTestLocation(TestModel testModel) {
