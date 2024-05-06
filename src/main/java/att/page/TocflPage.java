@@ -79,6 +79,7 @@ public class TocflPage {
             String languageType = String.format(LANG_TYPE, testModel.getSlot(), testModel.getLanguageType());
             String registerButton = String.format(REGISTER_BUTTON, testModel.getSlot());
             if (findXpath(testLocation) == null) {
+                log("click next page");
                 findXpath(NEXT_PAGE_NUMBER).click();
             }
             log("click test location");
