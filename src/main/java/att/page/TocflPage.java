@@ -84,9 +84,13 @@ public class TocflPage {
             if (registerButtonElm == null) {
                 continue;
             }
+            log("click test time");
             findXpath(testTime).click();
+            log("click test band");
             findXpath(testBand).click();
+            log("click language type");
             findXpath(languageType).click();
+            log("click register button");
             findXpath(registerButton).click();
             registered = true;
         }
@@ -94,6 +98,7 @@ public class TocflPage {
 
     public void confirmRegister() {
         findXpath(CONFIRM_REGISTER).click();
+        log("register sucessfully");
     }
 
     public void confirmIdentity() {
@@ -129,5 +134,9 @@ public class TocflPage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void log(String message) {
+        System.out.println(input.getUsername() + ": " + message);
     }
 }
