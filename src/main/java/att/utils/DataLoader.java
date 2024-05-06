@@ -64,7 +64,10 @@ public class DataLoader {
                     }
                 }
                 input.setTestModels(testModels);
-                inputs.add(input);
+                if (input.getUsername() != null && input.getPassword() != null) {
+                    System.out.println("Input failed on row num: " + row.getRowNum());
+                    inputs.add(input);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
