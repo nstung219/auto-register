@@ -46,6 +46,9 @@ public class TocflPage {
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
         System.out.println(this.input);
+        if (input.getUsername() == null || input.getPassword() == null) {
+            throw new IllegalArgumentException("Username and password must not be null");
+        }
     }
 
     public static WebDriver getDriver() {
