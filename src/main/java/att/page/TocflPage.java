@@ -71,6 +71,7 @@ public class TocflPage {
             if (registered) {
                 break;
             }
+            log("start to register");
             toHomePage();
             String testLocation = String.format(TEST_LOCATION, testModel.getDay(), testModel.getLocation());
             String testTime = String.format(TEST_TIME, testModel.getSlot());
@@ -80,6 +81,7 @@ public class TocflPage {
             if (findXpath(testLocation) == null) {
                 findXpath(NEXT_PAGE_NUMBER).click();
             }
+            log("click test location");
             findXpath(testLocation).click();
             sleep(2);
 
