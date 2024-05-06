@@ -26,7 +26,7 @@ public class BaseTest {
             tocflPage.setup(input);
             tocflPage.login();
             tocflPage.selectTestLocation();
-            tocflPage.confirmRegister();
+//            tocflPage.confirmRegister();
 //            tocflPage.confirmIdentity();
         } finally {
             tocflPage.tearDown();
