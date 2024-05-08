@@ -64,10 +64,11 @@ public class DataLoader {
                     }
                 }
                 input.setTestModels(testModels);
-                if (input.getUsername() != "" && input.getPassword() != "") {
+                if (input.getUsername() == "" && input.getPassword() == "") {
                     System.out.println("Input failed on row num: " + row.getRowNum());
-                    inputs.add(input);
+                    continue;
                 }
+                inputs.add(input);
             }
         } catch (Exception e) {
             e.printStackTrace();

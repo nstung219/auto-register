@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ThreadGuard;
-import att.utils.Util;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -32,8 +31,9 @@ public class TocflPage {
     // Replace language type
     private final String LANG_TYPE = TEST_TIME + "//input[@name=\"clang\" and @value = '%s']";
     private final String REGISTER_BUTTON = TEST_TIME + "//input[@type=\"button\" and contains(@value, \"報名\") and not(@disabled)]";
-    private final String CONFIRM_REGISTER = "//input[@type=\"button\" and contains(@value, \"確認報名資料正確\")]";
-    private final String CONFIRM_IDENTITY = "//input[@type = \"checkbox\" and @name = \"cok\"]";
+    private final String CONFIRM_IDENTITY_CHECKBOX = "//input[@type = \"checkbox\" and @name = \"cok\"]";
+    private final String CONFIRM_IDENTITY_BTN = "//input[@type=\"button\" and contains(@value, \"確認報名資料正確\")]";
+    private final String REGISTERED_TEST = "//a[text()[contains(., \"考生專區\")]]";
 
     public void setup(Input input) {
         this.input = input;
@@ -46,9 +46,6 @@ public class TocflPage {
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
         System.out.println(this.input);
-        if (input.getUsername() == null || input.getPassword() == null) {
-            throw new IllegalArgumentException("Username and password must not be null");
-        }
     }
 
     public static WebDriver getDriver() {
@@ -71,7 +68,6 @@ public class TocflPage {
             if (registered) {
                 break;
             }
-            log("start to register");
             toHomePage();
             String testLocation = String.format(TEST_LOCATION, testModel.getDay(), testModel.getLocation());
             String testTime = String.format(TEST_TIME, testModel.getSlot());
@@ -79,10 +75,9 @@ public class TocflPage {
             String languageType = String.format(LANG_TYPE, testModel.getSlot(), testModel.getLanguageType());
             String registerButton = String.format(REGISTER_BUTTON, testModel.getSlot());
             if (findXpath(testLocation) == null) {
-                log("click next page");
-                findXpath(NEXT_PAGE_NUMBER).click();
+                log("failed to find test location");
+                log("test location: " + testLocation + "on day: " + testModel.getDay());
             }
-            log("click test location");
             findXpath(testLocation).click();
             sleep(2);
 
@@ -90,35 +85,28 @@ public class TocflPage {
             if (registerButtonElm == null) {
                 continue;
             }
-            log("click test time");
             findXpath(testTime).click();
-            log("click test band");
             findXpath(testBand).click();
-            log("click language type");
             findXpath(languageType).click();
-            log("click register button");
             findXpath(registerButton).click();
+            acceptAlert();
             registered = true;
         }
     }
 
-    public void confirmRegister() {
-        findXpath(CONFIRM_REGISTER).click();
-        log("register sucessfully");
-    }
-
     public void confirmIdentity() {
-        findXpath(CONFIRM_IDENTITY).click();
-        getDriver().switchTo().alert().accept();
-        getDriver().switchTo().alert().accept();
+        findXpath(CONFIRM_IDENTITY_CHECKBOX).click();
+        findXpath(CONFIRM_IDENTITY_BTN).click();
+        acceptAlert();
+        acceptAlert();
+        log("registered sucessfully");
     }
 
+    public void acceptAlert() {
+        getDriver().switchTo().alert().accept();
+    }
     public void toHomePage() {
         getDriver().get(HOME_PAGE);
-    }
-
-    public void setInput(Input input) {
-        this.input = input;
     }
 
     public void tearDown() {
@@ -129,7 +117,7 @@ public class TocflPage {
     private WebElement findXpath(String xpath) {
         try {
             return getDriver().findElement(By.xpath(xpath));
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             return null;
         }
     }
