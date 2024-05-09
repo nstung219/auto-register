@@ -2,13 +2,19 @@ package att.page;
 
 import att.model.Input;
 import att.model.TestModel;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ThreadGuard;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TocflPage {
@@ -42,6 +48,7 @@ public class TocflPage {
 
         ChromeOptions options = new ChromeOptions();
 //            options.addArguments("--headless=new");
+        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT_AND_NOTIFY);
         options.addArguments("--no-default-browser-check");
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
@@ -57,12 +64,12 @@ public class TocflPage {
         sleep(2);
         findXpath(USERNAME).sendKeys(input.getUsername());
         findXpath(PASSWORD).sendKeys(input.getPassword());
-        findXpath(LOGIN).click();
+        click(LOGIN);
         sleep(2);
         getDriver().switchTo().alert().accept();
     }
 
-    public void selectTestLocation() {
+    public void selectTestLocation() throws IOException {
         boolean registered = false;
         for (TestModel testModel : input.getTestModels()) {
             if (registered) {
@@ -78,17 +85,17 @@ public class TocflPage {
                 log("failed to find test location");
                 log("test location: " + testLocation + "on day: " + testModel.getDay());
             }
-            findXpath(testLocation).click();
+            click(testLocation);
             sleep(2);
 
             WebElement registerButtonElm = findXpath(registerButton);
             if (registerButtonElm == null) {
                 continue;
             }
-            findXpath(testTime).click();
-            findXpath(testBand).click();
-            findXpath(languageType).click();
-            findXpath(registerButton).click();
+            click(testTime);
+            click(testBand);
+            click(languageType);
+            click(registerButton);
             acceptAlert();
             registered = true;
         }
@@ -114,12 +121,37 @@ public class TocflPage {
         driver.remove();
     }
 
+    private void click(String xpath) {
+        waitUntilClickable(xpath);
+        Objects.requireNonNull(findXpath(xpath)).click();
+    }
+
     private WebElement findXpath(String xpath) {
         try {
             return getDriver().findElement(By.xpath(xpath));
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    public void screenShot(boolean passed) throws IOException {
+        // Take screenshot
+        String path = "succeeded";
+        if (!passed) {
+            path = "failed";
+        }
+        File scrFile = ((TakesScreenshot)getDriver()).getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(scrFile, new File("./target/" + path + "/" + input.getUsername() + ".png"));
+    }
+
+    private void waitUntilClickable(String xpath) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+    }
+
+    private void waitUntilVisible(String xpath) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
     }
 
     private void sleep(int second) {

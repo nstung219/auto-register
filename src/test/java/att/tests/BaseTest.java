@@ -6,6 +6,7 @@ import org.testng.annotations.*;
 import att.page.TocflPage;
 import att.utils.DataLoader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BaseTest {
@@ -17,7 +18,7 @@ public class BaseTest {
     }
 
     @Test(dataProvider = "data")
-    public void test(Input input) {
+    public void test(Input input) throws Exception {
         TocflPage tocflPage = new TocflPage();
         try {
             if (input == null) {
@@ -26,8 +27,12 @@ public class BaseTest {
             tocflPage.setup(input);
             tocflPage.login();
             tocflPage.selectTestLocation();
+            tocflPage.screenShot(true);
 //            tocflPage.confirmRegister();
 //            tocflPage.confirmIdentity();
+        } catch (Exception e) {
+            tocflPage.screenShot(false);
+            throw new Exception(e);
         } finally {
             tocflPage.tearDown();
         }
