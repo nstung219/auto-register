@@ -47,6 +47,6 @@ public class TestModel {
     }
 
     public String toString() {
-        return day + "::" + location + "::" + slot + "::"  + "::" + band + "::" + languageType;
+        return day + "::" + location + "::" + slot + "::" + band + "::" + languageType;
     }
 }

@@ -10,15 +10,10 @@ import org.openqa.selenium.support.ThreadGuard;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TocflPage {
@@ -68,22 +63,15 @@ public class TocflPage {
 
     public void login() {
         getDriver().get(URL);
-        sleep(2);
         findXpath(USERNAME).sendKeys(input.getUsername());
         findXpath(PASSWORD).sendKeys(input.getPassword());
-        click(LOGIN);
-        sleep(2);
+        click(LOGIN, 5);
         acceptAlert();
-//        Alert alert = getDriver().switchTo().alert();
-//        if (alert.getText().contains(FAILED_TO_LOGIN_MESSAGE)) {
-//            screenShot(false);
-//            throw new RuntimeException(FAILED_TO_LOGIN_MESSAGE);
-//        }
-//        alert.accept();
     }
 
     public void logout() {
         click(LOGOUT_BTN);
+        acceptAlert();
     }
 
     public void selectTestLocation() throws IOException {
@@ -98,10 +86,6 @@ public class TocflPage {
             String testBand = String.format(TEST_BAND, testModel.getSlot(), testModel.getBand());
             String languageType = String.format(LANG_TYPE, testModel.getSlot(), testModel.getLanguageType());
             String registerButton = String.format(REGISTER_BUTTON, testModel.getSlot());
-            if (findXpath(testLocation) == null) {
-                log("failed to find test location");
-                log("test location: " + testLocation + "on day: " + testModel.getDay());
-            }
             click(testLocation);
             sleep(2);
 
@@ -118,6 +102,10 @@ public class TocflPage {
         }
     }
 
+    public void confirmRegister() {
+        click(CONFIRM_IDENTITY_BTN, 5);
+    }
+
     public void confirmIdentity() {
         findXpath(CONFIRM_IDENTITY_CHECKBOX).click();
         findXpath(CONFIRM_IDENTITY_BTN).click();
@@ -127,7 +115,10 @@ public class TocflPage {
     }
 
     public void acceptAlert() {
-        getDriver().switchTo().alert().accept();
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5) /*timeout in seconds*/);
+        if (wait.until(ExpectedConditions.alertIsPresent()) != null) {
+            getDriver().switchTo().alert().accept();
+        }
     }
     public void toHomePage() {
         getDriver().get(HOME_PAGE);
@@ -139,14 +130,21 @@ public class TocflPage {
     }
 
     private void click(String xpath) {
-        waitUntilClickable(xpath);
         findXpath(xpath).click();
+    }
+
+    private void click(String xpath, int time) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(time));
+        if (wait.until(ExpectedConditions.visibilityOf(findXpath(xpath))) != null) {
+            findXpath(xpath).click();
+        }
     }
 
     private WebElement findXpath(String xpath) {
         try {
             return getDriver().findElement(By.xpath(xpath));
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            System.out.println(xpath);
             return null;
         }
     }
@@ -161,13 +159,8 @@ public class TocflPage {
         FileUtils.copyFile(scrFile, new File("./target/" + path + "/" + input.getUsername() + ".png"));
     }
 
-    private void waitUntilClickable(String xpath) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
-    }
-
     private void waitUntilVisible(String xpath) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
     }
 
