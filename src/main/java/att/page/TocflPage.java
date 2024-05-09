@@ -10,6 +10,10 @@ import org.openqa.selenium.support.ThreadGuard;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
@@ -40,6 +44,8 @@ public class TocflPage {
     private final String CONFIRM_IDENTITY_CHECKBOX = "//input[@type = \"checkbox\" and @name = \"cok\"]";
     private final String CONFIRM_IDENTITY_BTN = "//input[@type=\"button\" and contains(@value, \"確認報名資料正確\")]";
     private final String REGISTERED_TEST = "//a[text()[contains(., \"考生專區\")]]";
+    private final String FAILED_TO_LOGIN_MESSAGE = "Login Error!";
+    private final String LOGOUT_BTN = "//a[@href = \"?logout=1\"]";
 
     public void setup(Input input) {
         this.input = input;
@@ -47,8 +53,9 @@ public class TocflPage {
         chromePreferences.put("profile.password_manager_enabled", false);
 
         ChromeOptions options = new ChromeOptions();
-//            options.addArguments("--headless=new");
-        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT_AND_NOTIFY);
+//        options.addArguments("--headless=new");
+//        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
+        options.addArguments("--incognito");
         options.addArguments("--no-default-browser-check");
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
@@ -66,7 +73,17 @@ public class TocflPage {
         findXpath(PASSWORD).sendKeys(input.getPassword());
         click(LOGIN);
         sleep(2);
-        getDriver().switchTo().alert().accept();
+        acceptAlert();
+//        Alert alert = getDriver().switchTo().alert();
+//        if (alert.getText().contains(FAILED_TO_LOGIN_MESSAGE)) {
+//            screenShot(false);
+//            throw new RuntimeException(FAILED_TO_LOGIN_MESSAGE);
+//        }
+//        alert.accept();
+    }
+
+    public void logout() {
+        click(LOGOUT_BTN);
     }
 
     public void selectTestLocation() throws IOException {
@@ -117,13 +134,13 @@ public class TocflPage {
     }
 
     public void tearDown() {
-        getDriver().close();
+        getDriver().quit();
         driver.remove();
     }
 
     private void click(String xpath) {
         waitUntilClickable(xpath);
-        Objects.requireNonNull(findXpath(xpath)).click();
+        findXpath(xpath).click();
     }
 
     private WebElement findXpath(String xpath) {

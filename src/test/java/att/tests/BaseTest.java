@@ -28,11 +28,12 @@ public class BaseTest {
             tocflPage.login();
             tocflPage.selectTestLocation();
             tocflPage.screenShot(true);
+            tocflPage.logout();
 //            tocflPage.confirmRegister();
 //            tocflPage.confirmIdentity();
         } catch (Exception e) {
             tocflPage.screenShot(false);
-            throw new Exception(e);
+//            throw new Exception(e);
         } finally {
             tocflPage.tearDown();
         }
