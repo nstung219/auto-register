@@ -1,8 +1,8 @@
 Automated language test registration
 ====================================
 [Requirements](#requirements)
-- (Java 17)[https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html]
-- (Maven)[https://maven.apache.org/download.cgi]
+- [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- [Maven](https://maven.apache.org/download.cgi)
 
 [Data instruction](#data-instruction)
 - Data for registration is stored in an Excel file in following format:
