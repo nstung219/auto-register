@@ -15,12 +15,12 @@ Automated language test registration
     - third field: time slot of event
     - fourth field: language band (Band A, Band B, Band C)
     - fifth field: language type (Traditional, Simplified)
-  - Any following columns: additional test event information, the program will prioritize test event information in order
+  - Any following columns: additional test event information, the program will prioritize test event information in descending order
 - Each row represents a student registration
 - If Excel cell has value started with `0`, add `'` before the value to prevent Excel from removing the leading `0`
 - Example line: Username, Password, 2024/06/23::越南_越南城東大學 越南_越南城東大學::( 08:00 - 10:00 )::Band A::Traditional
 
 [Program Instruction](#program-instruction)
-- Run `mvn -B clean test -DdataPath="Auto-login.xlsx"` to execute registration for all users in the Excel file. Replace `Auto-login.xlsx` with the path to the excel file
+- Run `mvn -B clean test -DdataPath="Auto-login.xlsx"` to execute registration for all users in the Excel file. Replace `Auto-login.xlsx` with the path to the Excel file
   - Add `-Ddataproviderthreadcount=number` parameter to set the number of concurrent users to be registered
-- After the program has completed, check `succeeded` and `failed` folders inside `target` folder for register result
+- After the program has completed, check `succeeded` and `failed` folders inside `target` folder for registration result
