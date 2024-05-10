@@ -1,5 +1,6 @@
 package att.page;
 
+import att.exception.NoSuchElementException;
 import att.model.Input;
 import att.model.TestModel;
 import org.apache.commons.io.FileUtils;
@@ -21,6 +22,14 @@ public class TocflPage {
     protected static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     protected Input input;
 
+    /**
+     * Exception code
+     */
+    private final String NO_SUCH_ELEMENT = "no such element";
+
+    /**
+     * Xpath
+     */
     private final String URL = "https://tocfl.sc-top.org.tw/zoom/index.php?country=007";
     private final String HOME_PAGE = "https://tocfl.sc-top.org.tw/zoom/index.php";
     private final String USERNAME = "//*[@id=\"textfield\" and @name=\"uid\"]";
@@ -89,9 +98,12 @@ public class TocflPage {
             click(testLocation);
             sleep(2);
 
-            WebElement registerButtonElm = findXpath(registerButton);
-            if (registerButtonElm == null) {
-                continue;
+            try {
+                findXpath(registerButton);
+            } catch (NoSuchElementException e) {
+                if (e.getMessage().equals(NO_SUCH_ELEMENT)) {
+                    continue;
+                }
             }
             click(testTime);
             click(testBand);
@@ -151,8 +163,7 @@ public class TocflPage {
         try {
             return getDriver().findElement(By.xpath(xpath));
         } catch (Exception e) {
-            System.out.println(xpath);
-            return null;
+            throw new NoSuchElementException(NO_SUCH_ELEMENT);
         }
     }
 
