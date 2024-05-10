@@ -22,14 +22,6 @@ public class TocflPage {
     protected static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     protected Input input;
 
-    /**
-     * Exception code
-     */
-    private final String NO_SUCH_ELEMENT = "no such element";
-
-    /**
-     * Xpath
-     */
     private final String URL = "https://tocfl.sc-top.org.tw/zoom/index.php?country=007";
     private final String HOME_PAGE = "https://tocfl.sc-top.org.tw/zoom/index.php";
     private final String USERNAME = "//*[@id=\"textfield\" and @name=\"uid\"]";
@@ -57,9 +49,13 @@ public class TocflPage {
         chromePreferences.put("profile.password_manager_enabled", false);
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
+//        options.addArguments("--headless=new");
         options.addArguments("--incognito");
         options.addArguments("--no-default-browser-check");
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--ignore-certificate-errors");
+        String userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36";
+        options.addArguments("user-agent=" + userAgent);
 //        options.addArguments("--start-maximized");
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
@@ -96,14 +92,11 @@ public class TocflPage {
             String languageType = String.format(LANG_TYPE, testModel.getSlot(), testModel.getLanguageType());
             String registerButton = String.format(REGISTER_BUTTON, testModel.getSlot());
             click(testLocation);
-            sleep(2);
-
             try {
                 findXpath(registerButton);
             } catch (NoSuchElementException e) {
-                if (e.getMessage().equals(NO_SUCH_ELEMENT)) {
-                    continue;
-                }
+                log(e.getMessage());
+                continue;
             }
             click(testTime);
             click(testBand);
@@ -163,7 +156,7 @@ public class TocflPage {
         try {
             return getDriver().findElement(By.xpath(xpath));
         } catch (Exception e) {
-            throw new NoSuchElementException(NO_SUCH_ELEMENT);
+            throw new NoSuchElementException(xpath);
         }
     }
 
