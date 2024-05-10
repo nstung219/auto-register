@@ -48,10 +48,10 @@ public class TocflPage {
         chromePreferences.put("profile.password_manager_enabled", false);
 
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless=new");
-//        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
+        options.addArguments("--headless=new");
         options.addArguments("--incognito");
         options.addArguments("--no-default-browser-check");
+//        options.addArguments("--start-maximized");
         options.setExperimentalOption("prefs", chromePreferences);
         driver.set(ThreadGuard.protect(new ChromeDriver(options)));
         System.out.println(this.input);
@@ -63,8 +63,8 @@ public class TocflPage {
 
     public void login() {
         getDriver().get(URL);
-        findXpath(USERNAME).sendKeys(input.getUsername());
-        findXpath(PASSWORD).sendKeys(input.getPassword());
+        sendKeys(USERNAME, input.getUsername());
+        sendKeys(PASSWORD, input.getPassword());
         click(LOGIN, 5);
         acceptAlert();
     }
@@ -140,6 +140,13 @@ public class TocflPage {
         }
     }
 
+    private void sendKeys(String xpath, String keys) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
+        if (wait.until(ExpectedConditions.visibilityOf(findXpath(xpath))) != null) {
+            findXpath(xpath).sendKeys(keys);
+        }
+    }
+
     private WebElement findXpath(String xpath) {
         try {
             return getDriver().findElement(By.xpath(xpath));
@@ -157,11 +164,6 @@ public class TocflPage {
         }
         File scrFile = ((TakesScreenshot)getDriver()).getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(scrFile, new File("./target/" + path + "/" + input.getUsername() + ".png"));
-    }
-
-    private void waitUntilVisible(String xpath) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
     }
 
     private void sleep(int second) {
