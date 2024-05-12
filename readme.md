@@ -1,6 +1,6 @@
 Automated language test registration
 ====================================
-[Requirements](#requirements)
+[Yêu cầu phần mềm](#requirements)
 - [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
   - Tải về và cài đặt
 - [Maven](https://maven.apache.org/download.cgi)
