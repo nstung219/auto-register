@@ -13,7 +13,7 @@ Automated language test registration
   - Cột thứ ba: thông tin ngày thi được chia cách bởi dấu `::`(hai dấu hai chấm) gồm 5 trường:
     - Trường thứ nhất: ngày thi `2024/07/06`
     - Trường thứ hai: Địa điểm thi (copy phần tiếng trung)
-    - Trường thứ ba: khung giờ thi (08:10)
+    - Trường thứ ba: khung giờ thi `(08:10)`
     - Trường thứ tư: Band (Band A, Band B, Band C)
     - Trường thứ năm: loại tiếng (Traditional, Simplified)
   - Tất cả những cột sau cột thứ ba là thông tin ngày thi thêm, sắp xếp theo thứ tự ưu tiên giảm dần
