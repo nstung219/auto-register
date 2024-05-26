@@ -18,4 +18,8 @@ public class Input {
     public String toString() {
         return "Username: " + username + ", Password: " + password + ", Test Models: " + testModels.stream().map(TestModel::toString).collect(Collectors.joining(", "));
     }
+
+    public boolean isInValid() {
+        return username == "" || password == "" || username == null || password == null;
+    }
 }

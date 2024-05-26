@@ -1,13 +1,9 @@
 package att.tests;
 
 import att.model.Input;
-import att.model.TestModel;
 import org.testng.annotations.*;
 import att.page.TocflPage;
 import att.utils.DataLoader;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class BaseTest {
     private DataLoader dataLoader = new DataLoader();
@@ -20,11 +16,11 @@ public class BaseTest {
     @Test(dataProvider = "data")
     public void test(Input input) throws Exception {
         TocflPage tocflPage = new TocflPage();
+        tocflPage.setup(input);
         try {
-            if (input == null) {
+            if (input.isInValid()) {
                 return;
             }
-            tocflPage.setup(input);
             tocflPage.login();
             tocflPage.selectTestLocation();
             tocflPage.confirmRegister();
