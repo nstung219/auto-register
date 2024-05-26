@@ -28,7 +28,7 @@ public class BaseTest {
             tocflPage.login();
             tocflPage.selectTestLocation();
             tocflPage.confirmRegister();
-//            tocflPage.confirmIdentity();
+            tocflPage.confirmIdentity();
             tocflPage.screenShot(true);
             tocflPage.logout();
         } catch (Exception e) {
